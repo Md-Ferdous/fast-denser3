@@ -967,7 +967,21 @@ class Individual:
                             train_time, self.num_epochs, datagen, datagen_test)])
             metrics = pool_results.get()[0]
 
+         if metrics is not None:
+            
+            self.metrics = metrics
+            self.fitness = self.metrics['accuracy_test'].item()
+            self.num_epochs += len(self.metrics['val_accuracy'])
+            self.trainable_parameters = self.metrics['trainable_parameters']
+            self.current_time += (self.train_time-self.current_time)
+        else:
+            self.metrics = None
+            self.fitness = -1
+            self.num_epochs = 0
+            self.trainable_parameters = -1
+            self.current_time = 0
 
+        self.time = time() - start
         
         return self.fitness
 
